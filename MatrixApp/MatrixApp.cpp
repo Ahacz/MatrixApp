@@ -2,10 +2,11 @@
 //
 
 #include <iostream>
+#include "Matrix.cpp"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    Matrix<int> nowa(4, 3, 2);
 }
 
 // Uruchomienie programu: Ctrl + F5 lub menu Debugowanie > Uruchom bez debugowania
