@@ -1,5 +1,4 @@
-#ifndef __MatrixApp_Matrix
-#define __MatrixApp_Matrix
+#pragma once
 
 #include <iostream>
 
@@ -55,4 +54,3 @@ public:
 	unsigned getRows() const;
 	unsigned getCols() const;
 };
-#endif /* defined(__MatrixApp_Matrix) */

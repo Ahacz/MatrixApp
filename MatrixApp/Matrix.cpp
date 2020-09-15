@@ -1,21 +1,20 @@
-#include "Matrix.h"
 #pragma once
-
+#include "Matrix.h"
 
 using namespace std;
 
 //////////////////   Dynamic Array starts here 
-//Copy constructor
-template<typename T>
-DynamicArray<T>::DynamicArray(DynamicArray& source) {
-    _arraySize = source.size();
-    _arrayPointer = new T[_arraySize];
-}
 //Constructor without arguments creates an array of size 0.
 template<typename T>
 DynamicArray<T>::DynamicArray() {
     _arrayPointer = new T[0];
     _arraySize = 0;
+}
+//Copy constructor
+template<typename T>
+DynamicArray<T>::DynamicArray(DynamicArray& source) {
+    _arraySize = source.size();
+    _arrayPointer = new T[_arraySize];
 }
 //Creates an array of specified size.
 template<typename T>
@@ -40,6 +39,7 @@ const T& DynamicArray<T>::operator[](unsigned index) const{
 }
 template<typename T>
 DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray<T>& source) {
+    if (&source == this) { return *this; }
     _arraySize = source.size();
     delete[] _arrayPointer;
     _arrayPointer = new T[_arraySize];
@@ -50,6 +50,7 @@ DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray<T>& source) {
 }
 template<typename T>
 const DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T>& source) {
+    if (&source == this) { return *this; }
     _arraySize = source.size();
     delete[] _arrayPointer;
     _arrayPointer = new T[_arraySize];
@@ -123,10 +124,10 @@ template<typename T>
 T& Matrix<T>::operator()(const unsigned& rowNo, const unsigned& colNo){
     return this->m_matrix[rowNo][colNo];
 }
-template<typename T>
-const T& Matrix<T>::operator()(const unsigned& rowNo, const unsigned& colNo) const{
-    return this->m_matrix[rowNo][colNo];
-}
+//template<typename T>
+//const T& Matrix<T>::operator()(const unsigned& rowNo, const unsigned& colNo) const{
+//    return this->m_matrix[rowNo][colNo];
+//}
 template<typename T>
 Matrix<T> Matrix<T>::operator+(const Matrix& rhs) {
 
