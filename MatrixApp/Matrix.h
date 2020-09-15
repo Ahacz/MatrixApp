@@ -19,9 +19,10 @@ public:
 	T& operator[] (unsigned);
 	const T& operator[] (unsigned) const;
 	DynamicArray<T>& operator=(DynamicArray<T>&);
+	const DynamicArray<T>& operator=(const DynamicArray<T>&);
 
 	//Size and resize methods
-	unsigned size();
+	unsigned size() const;
 	void resize(unsigned, T newValue=0);
 };
 template <typename T> class Matrix 

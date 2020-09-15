@@ -35,19 +35,33 @@ T& DynamicArray<T>::operator[](unsigned index) {
     return _arrayPointer[index];
 }
 template <typename T>
-const T& DynamicArray<T>::operator[](unsigned index) const {
+const T& DynamicArray<T>::operator[](unsigned index) const{
     return _arrayPointer[index];
 }
 template<typename T>
 DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray<T>& source) {
     _arraySize = source.size();
+    delete[] _arrayPointer;
     _arrayPointer = new T[_arraySize];
+    for (unsigned i = 0;i < _arraySize;i++) {
+        _arrayPointer[i] = source[i];
+    }
+    return *this;
+}
+template<typename T>
+const DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T>& source) {
+    _arraySize = source.size();
+    delete[] _arrayPointer;
+    _arrayPointer = new T[_arraySize];
+    for (unsigned i = 0;i < _arraySize;i++) {
+        _arrayPointer[i] = source[i];
+    }
     return *this;
 }
 
 //Gets number of array elements
 template <typename T>
-unsigned DynamicArray<T>::size() {
+unsigned DynamicArray<T>::size() const{
     return _arraySize;
 }
 
@@ -102,13 +116,7 @@ Matrix<T>& Matrix<T>::operator=(const Matrix& rhs) {
     }
     m_rowSize = rhs.getRows();
     m_colSize = rhs.getCols();
-    m_matrix.resize(m_rowSize);
-    for (unsigned i = 0;i < m_rowSize;++i) {
-        m_matrix[i].resize(m_colSize);
-        for(unsigned j = 0; j<m_colSize;++j) {
-            m_matrix[i][j] = rhs(i, j);
-        }
-    }
+    m_matrix = rhs.m_matrix;
     return *this;
 }
 template<typename T>

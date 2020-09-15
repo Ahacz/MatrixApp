@@ -10,7 +10,6 @@ int main()
     nowa.print();
     nowa2.print();
     nowa2 = nowa;
-    //cout << nowa2.getRows() << endl;
     nowa2.print();
     cin >> tmp;
 }
