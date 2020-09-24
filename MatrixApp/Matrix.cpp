@@ -139,30 +139,43 @@ Matrix<T> Matrix<T>::operator+(const Matrix& rhs) {
     if(m_colSize!=rhs.getCols()||m_rowSize!=rhs.getCols()){ //Make sure both matrices are same size.
         throw std::invalid_argument("Both matrices must be of the same size for addition!");
     }
-    Matrix<T> resultingMatrix(m_rowSize, m_colSize, 0);
+    Matrix<T> resultMatrix(m_rowSize, m_colSize, 0);
     for (unsigned i = 0;i < m_rowSize;++i) {
         for (unsigned j = 0;j < m_colSize;++j) {
-            resultingMatrix(i, j) = (*this)(i, j) + rhs(i, j);
+            resultMatrix(i, j) = (*this)(i, j) + rhs(i, j);
         }
     }
-    return resultingMatrix;
+    return resultMatrix;
 }
 template<typename T>
 Matrix<T> Matrix<T>::operator-(const Matrix& rhs) {
     if (m_colSize != rhs.getCols() || m_rowSize != rhs.getCols()) { //Make sure both matrices are same size.
         throw std::invalid_argument("Both matrices must be of the same size for subtraction!");
     }
-    Matrix<T> resultingMatrix(m_rowSize, m_colSize, 0);
+    Matrix<T> resultMatrix(m_rowSize, m_colSize, 0);
     for (unsigned i = 0;i < m_rowSize;++i) {
         for (unsigned j = 0;j < m_colSize;++j) {
-            resultingMatrix(i, j) = (*this)(i, j) - rhs(i, j);
+            resultMatrix(i, j) = (*this)(i, j) - rhs(i, j);
         }
     }
-    return resultingMatrix;
+    return resultMatrix;
 }
 template<typename T>
 Matrix<T> Matrix<T>::operator*(const Matrix& rhs) {
-
+    unsigned i, j, k;
+    unsigned rhsCols = rhs.getCols(); //Save time on calling rhs.getCols() multiple times.
+    if (m_rowSize != rhsCols) { //Check for validity of matrices for multiplication
+        throw std::invalid_argument("First matrix must have the same number of rows as the second matrix columns!");
+    }
+    Matrix<T> resultMatrix(m_rowSize, rhsCols, 0);
+    for (i = 0;i < m_rowSize;++i) {
+        for (j = 0;j < rhsCols;++j) {
+            for (k = 0;k < m_colSize;++k) {
+                resultMatrix(i, j) += (*this)(i,k) * rhs(k,j);
+            }
+        }
+    }
+    return resultMatrix;
 }
 template<typename T>
 Matrix<T>& Matrix<T>::operator+=(const Matrix& rhs) {
@@ -191,14 +204,10 @@ Matrix<T>& Matrix<T>::operator-=(const Matrix& rhs) {
     return *this;
 }
 template<typename T>
-Matrix<T>& Matrix<T>::operator*=(const Matrix& rhs) {
-
-}
-
-
-//Transpose method
-template<typename T>
-Matrix<T> Matrix<T>::transpose() {
+Matrix<T>& Matrix<T>::operator*=(const Matrix& rhs) {  //Doing this operation directly on returned matrix would lose the data needed.
+    Matrix <T> resultMatrix = (*this) * rhs;    
+    (*this) = resultMatrix;
+    return *this;
 }
 
 // Print method

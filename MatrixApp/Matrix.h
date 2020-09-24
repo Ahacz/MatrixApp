@@ -24,7 +24,13 @@ public:
 	unsigned size() const;
 	void resize(unsigned, T newValue=0);
 };
-template <typename T> class Matrix 
+
+class IMatrix { //Trying to apply polymorphism, so that user can specify type of matrix in the main program.
+public:
+	virtual ~IMatrix() {};
+};
+
+template <typename T> class Matrix: public IMatrix
 {
 private:
 	unsigned m_rowSize;
@@ -32,7 +38,7 @@ private:
 	DynamicArray<DynamicArray<T> > m_matrix;
 public:
 	Matrix();
-	Matrix(unsigned, unsigned, const T&);
+	Matrix(unsigned, unsigned, const T& initialValue = 0);
 	Matrix(const Matrix&);
 	~Matrix();
 
@@ -45,7 +51,6 @@ public:
 	Matrix& operator+=(const Matrix&);
 	Matrix& operator-=(const Matrix&);
 	Matrix& operator*=(const Matrix&);
-	Matrix transpose();
 
 
 	// Aesthetic Methods
