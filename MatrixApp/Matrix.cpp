@@ -85,6 +85,12 @@ void DynamicArray<T>::resize(unsigned newSize, T newValue) {
 
 //////////////////   Matrix starts here
 
+//Empty constructor. Size 0 across both dimensions.
+template<typename T>
+Matrix<T>::Matrix() {
+    m_rowSize = 0;
+    m_colSize = 0;
+}
 // Constructor for Any Matrix; filled with initial value provided.
 template<typename T>
 Matrix<T>::Matrix(unsigned rows, unsigned cols, const T& initialValue) {
@@ -124,17 +130,35 @@ template<typename T>
 T& Matrix<T>::operator()(const unsigned& rowNo, const unsigned& colNo){
     return this->m_matrix[rowNo][colNo];
 }
-//template<typename T>
-//const T& Matrix<T>::operator()(const unsigned& rowNo, const unsigned& colNo) const{
-//    return this->m_matrix[rowNo][colNo];
-//}
+template<typename T>
+const T& Matrix<T>::operator()(const unsigned& rowNo, const unsigned& colNo) const{
+    return this->m_matrix[rowNo][colNo];
+}
 template<typename T>
 Matrix<T> Matrix<T>::operator+(const Matrix& rhs) {
-
+    if(m_colSize!=rhs.getCols()||m_rowSize!=rhs.getCols()){ //Make sure both matrices are same size.
+        throw std::invalid_argument("Both matrices must be of the same size for addition!");
+    }
+    Matrix<T> resultingMatrix(m_rowSize, m_colSize, 0);
+    for (unsigned i = 0;i < m_rowSize;++i) {
+        for (unsigned j = 0;j < m_colSize;++j) {
+            resultingMatrix(i, j) = (*this)(i, j) + rhs(i, j);
+        }
+    }
+    return resultingMatrix;
 }
 template<typename T>
 Matrix<T> Matrix<T>::operator-(const Matrix& rhs) {
-
+    if (m_colSize != rhs.getCols() || m_rowSize != rhs.getCols()) { //Make sure both matrices are same size.
+        throw std::invalid_argument("Both matrices must be of the same size for subtraction!");
+    }
+    Matrix<T> resultingMatrix(m_rowSize, m_colSize, 0);
+    for (unsigned i = 0;i < m_rowSize;++i) {
+        for (unsigned j = 0;j < m_colSize;++j) {
+            resultingMatrix(i, j) = (*this)(i, j) - rhs(i, j);
+        }
+    }
+    return resultingMatrix;
 }
 template<typename T>
 Matrix<T> Matrix<T>::operator*(const Matrix& rhs) {
@@ -142,11 +166,29 @@ Matrix<T> Matrix<T>::operator*(const Matrix& rhs) {
 }
 template<typename T>
 Matrix<T>& Matrix<T>::operator+=(const Matrix& rhs) {
-
+    if (m_colSize != rhs.getCols() || m_rowSize != rhs.getCols()) { //Make sure both matrices are same size.
+        throw std::invalid_argument("Both matrices must be of the same size for addition!");
+    }
+    for (unsigned i = 0;i < m_rowSize;++i) {
+        for (unsigned j = 0;j < m_colSize;++j) {
+            (*this)(i, j) += rhs(i, j);
+        }
+    }
+    return *this;
 }
 template<typename T>
 Matrix<T>& Matrix<T>::operator-=(const Matrix& rhs) {
-
+    unsigned rows = this->getRows();
+    unsigned cols = this->getCols();
+    if (cols != rhs.getCols() || rows != rhs.getCols()) { //Make sure both matrices are same size.
+        throw std::invalid_argument("Both matrices must be of the same size for subtraction!");
+    }
+    for (unsigned i = 0;i < rows;++i) {
+        for (unsigned j = 0;j < cols;++j) {
+            (*this)(i, j) -= rhs(i, j);
+        }
+    }
+    return *this;
 }
 template<typename T>
 Matrix<T>& Matrix<T>::operator*=(const Matrix& rhs) {

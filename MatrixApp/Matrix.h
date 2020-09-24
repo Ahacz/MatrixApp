@@ -31,6 +31,7 @@ private:
 	unsigned m_colSize;
 	DynamicArray<DynamicArray<T> > m_matrix;
 public:
+	Matrix();
 	Matrix(unsigned, unsigned, const T&);
 	Matrix(const Matrix&);
 	~Matrix();
@@ -50,7 +51,7 @@ public:
 	// Aesthetic Methods
 	T& operator()(const unsigned&, const unsigned&);
 	const T& operator()(const unsigned&, const unsigned&) const;
-	void print();			//Jak jest const to wywala b³¹d...
+	void print();
 	unsigned getRows() const;
 	unsigned getCols() const;
 };
