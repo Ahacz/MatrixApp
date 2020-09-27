@@ -103,6 +103,20 @@ Matrix<T>::Matrix(unsigned rows, unsigned cols, const T& initialValue) {
     m_colSize = cols;
 }
 
+// Constructor for Any Matrix; asking for user value.
+template<typename T>
+Matrix<T>::Matrix(unsigned rows, unsigned cols) {
+    T initialValue;
+    cout << "Please provide an initial value for the matrix: ";
+    cin >> initialValue;
+    m_matrix.resize(rows);
+    for (unsigned i = 0; i < m_matrix.size(); i++) {
+        m_matrix[i].resize(cols, initialValue);
+    }
+    m_rowSize = rows;
+    m_colSize = cols;
+}
+
 //Copy constructor
 template<typename T>
 Matrix<T>::Matrix(const Matrix<T>& source) {
@@ -213,7 +227,6 @@ Matrix<T>& Matrix<T>::operator*=(const Matrix& rhs) {  //Doing this operation di
 // Print method
 template<typename T>
 void Matrix<T>::print() {
-    cout << "Matrix: " << endl;
     for (unsigned i = 0; i < m_rowSize; i++) {
         for (unsigned j = 0; j < m_colSize; j++) {
             cout << "[" << m_matrix[i][j] << "] ";
