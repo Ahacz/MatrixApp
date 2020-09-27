@@ -9,6 +9,9 @@ void StartCalc(char &);
 template <typename T>
 void EditMatrix(Matrix<T> &);
 
+template <typename T>
+void StartMatrixEdition(Matrix<T>&, Matrix<T>&, Matrix<T>&, char &);
+
 int main()
 {
 	char programControlKey = ' ';
@@ -88,8 +91,7 @@ void StartCalc(char & controlKey) {
 			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
 			break;
 		case'4':
-			c = a + b;
-			try { a *= b; }
+			try { c = a + b; }
 			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
 			break;
 		case'5':
@@ -101,85 +103,7 @@ void StartCalc(char & controlKey) {
 			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
 			break;
 		case'7':
-			cout << "1: Copy a matrix | 2: Edit matrix values | 3: Switch matrix places\n";
-			cin.ignore();
-			cin.get(controlKey);
-			switch (controlKey)
-			{
-			case '1':
-				cout << "1: a=b | 2: a=c | 3: b=a | 4: b=c | 5: c=a | 6: c=b: ";
-				cin.ignore();
-				cin.get(controlKey);
-				switch (controlKey)
-				{
-				case '1':
-					a = b;
-					break;
-				case '2':
-					a = c;
-					break;
-				case '3':
-					b = a;
-					break;
-				case '4':
-					b = c;
-					break;
-				case '5':
-					c = a;
-					break;
-				case '6':
-					c = b;
-					break;
-				default:
-					break;
-				}
-				break;
-			case '2':
-				cout << "a - edit A | b - edit B | c - edit C";
-				cin.ignore();
-				cin.get(controlKey);
-				switch (controlKey){
-				case 'a':
-					EditMatrix(a);
-					break;
-				case 'b':
-					EditMatrix(b);
-					break;
-				case 'c':
-					EditMatrix(c);
-					break;
-				default:
-					break;
-				}
-				break;
-			case '3':
-				cout << "1: a<->b | 2: a<->c | 3: b<->c\n";
-				cin.ignore();
-				cin.get(controlKey);
-				Matrix<T> temp = Matrix<T>();
-				switch (controlKey)
-				{
-				case '1':
-					temp = a;
-					a = b;
-					b = temp;
-					break;
-				case '2':
-					temp = a;
-					a = c;
-					c = temp;
-					break;
-				case '3':
-					temp = b;
-					b = c;
-					c = temp;
-					break;
-				default:
-					break;
-				}
-				break;
-			}
-			break;
+			StartMatrixEdition(a, b, c, controlKey);
 		default:
 			break;
 		}
@@ -188,8 +112,7 @@ void StartCalc(char & controlKey) {
 }
 
 template <typename T>
-void EditMatrix(Matrix<T>& EditedMatrix)
-{
+void EditMatrix(Matrix<T>& EditedMatrix){
 	unsigned row, col;
 	T value;
 	char controlKey;
@@ -204,4 +127,86 @@ void EditMatrix(Matrix<T>& EditedMatrix)
 		cin.ignore();
 		cin.get(controlKey);
 	} while (controlKey != 'q');
+}
+
+template <typename T>
+void StartMatrixEdition(Matrix<T>& a, Matrix<T>& b, Matrix<T>& c, char & controlKey) {
+	cout << "1: Copy a matrix | 2: Edit matrix values | 3: Switch matrix places\n";
+	cin.ignore();
+	cin.get(controlKey);
+	switch (controlKey)
+	{
+	case '1':
+		cout << "1: a=b | 2: a=c | 3: b=a | 4: b=c | 5: c=a | 6: c=b: ";
+		cin.ignore();
+		cin.get(controlKey);
+		switch (controlKey)
+		{
+		case '1':
+			a = b;
+			break;
+		case '2':
+			a = c;
+			break;
+		case '3':
+			b = a;
+			break;
+		case '4':
+			b = c;
+			break;
+		case '5':
+			c = a;
+			break;
+		case '6':
+			c = b;
+			break;
+		default:
+			break;
+		}
+		break;
+	case '2':
+		cout << "a - edit A | b - edit B | c - edit C";
+		cin.ignore();
+		cin.get(controlKey);
+		switch (controlKey) {
+		case 'a':
+			EditMatrix(a);
+			break;
+		case 'b':
+			EditMatrix(b);
+			break;
+		case 'c':
+			EditMatrix(c);
+			break;
+		default:
+			break;
+		}
+		break;
+	case '3':
+		cout << "1: a<->b | 2: a<->c | 3: b<->c\n";
+		cin.ignore();
+		cin.get(controlKey);
+		Matrix<T> temp = Matrix<T>();
+		switch (controlKey)
+		{
+		case '1':
+			temp = a;
+			a = b;
+			b = temp;
+			break;
+		case '2':
+			temp = a;
+			a = c;
+			c = temp;
+			break;
+		case '3':
+			temp = b;
+			b = c;
+			c = temp;
+			break;
+		default:
+			break;
+		}
+		break;
+	}
 }

@@ -7,7 +7,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UnitTests
 {
-	TEST_CLASS(UnitTests)
+	TEST_CLASS(DynamicArrayTest)
 	{
 	public:
 		
@@ -48,10 +48,13 @@ namespace UnitTests
 			Assert::AreEqual((unsigned)3, testingArray.size()); //Check size value
 			Assert::AreEqual(9, testingArray[2]);				//Check value of third index
 		}
+	};
+	TEST_CLASS(MatrixTest)
+	{
 		TEST_METHOD(MatrixConstructors)
 		{
 			Matrix<int> testingMatrix(2, 3, 5);
-			Assert::AreEqual(5, testingMatrix(1,2));	//Check if the matrix is filled, as well as the () operator
+			Assert::AreEqual(5, testingMatrix(1, 2));	//Check if the matrix is filled, as well as the () operator
 			Matrix<int> testingMatrix2(testingMatrix);  //Copy Constructor
 			Assert::AreEqual(5, testingMatrix2(1, 2));
 		}
