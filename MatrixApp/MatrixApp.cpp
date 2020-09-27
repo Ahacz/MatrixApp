@@ -3,98 +3,205 @@
 #include "Matrix.cpp"
 #include <vector>
 
-IMatrix* getTypedMatrixPointer(unsigned, unsigned, char);
+template <typename T>
+void StartCalc(char &);
+
+template <typename T>
+void EditMatrix(Matrix<T> &);
 
 int main()
 {
 	char programControlKey = ' ';
 	char matrixTypeChoice;
-	unsigned rowsA, colsA,rowsB,colsB;
-	IMatrix *a,*b,*c;
 	do {
 		system("CLS");
-		cout << "Enter the number of rows and columns for matrix A, divided by a single space: ";
-		cin >> rowsA >> colsA;
-		cout << "Enter the number of rows and columns for matrix B, divided by a single space: ";
-		cin >> rowsB >> colsB;
 		cout << "Please specify the type of matrix you want to be working on by pressing a key."<<
 			"\nf-float d-double i-int -u unisgned -l long: ";
+		cin.get(matrixTypeChoice);
+
+		switch (matrixTypeChoice)//This switch is really messy but right now i just don't know how to make it that much cleaner...
+		{
+			case 'f': {
+				StartCalc<float>(programControlKey);
+				break;
+			}
+			case 'd':{
+				StartCalc<double>(programControlKey);
+			break;
+			}
+			case 'i': {
+				StartCalc<int>(programControlKey);
+				break;
+			}
+			case 'u': {
+				StartCalc<unsigned>(programControlKey);
+				break;
+			}
+			case 'l': {
+				StartCalc<long>(programControlKey);
+				break;
+			}
+			default: {
+				cout << "No option found for: " << matrixTypeChoice << ". Integer applied as default.\n";
+				StartCalc<int>(programControlKey);
+				break;
+			}
+		}
+	} while (programControlKey != 'q');
+}
+
+
+template <typename T>
+void StartCalc(char & controlKey) {
+	unsigned rows, cols;
+	T value;
+	cout << "Enter the number of rows and columns, along with the value for matrix A, divided by a single space: ";
+	cin >> rows >> cols >> value;
+	Matrix<T> a = Matrix<T>(rows, cols, value);
+	cout << "Enter the number of rows and columns, along with the value for matrix B, divided by a single space: ";
+	cin >> rows >> cols >> value;
+	Matrix<T> b = Matrix<T>(rows, cols, value);
+	Matrix<T> c = Matrix<T>();
+	do {
+		system("CLS");
+		cout << "Matrix A:\n";
+		a.print();
+		cout << "Matrix B:\n";
+		b.print();		
+		cout << "Matrix C:\n";
+		c.print();
+		cout << "r - back to choosing matrix types | q - quit\n"
+			<< "1: a=a*b | 2: c=a*b | 3: a=a+b | 4: c=a+b | 5: a=a-b | 6: c=a-b | 7: change matrices\n";
 		cin.ignore();
-		matrixTypeChoice = cin.get();
-		a = getTypedMatrixPointer(rowsA, colsA, matrixTypeChoice);
-		b = getTypedMatrixPointer(rowsB, colsB, matrixTypeChoice);
-		c = getTypedMatrixPointer(0, 0, matrixTypeChoice);
-		
-		do{
-			system("CLS");
-			cout << "Matrix A:\n";
-			a->print();
-			cout << "Matrix B:\n";
-			b->print();
-			cout << "Matrix C:\n";
-			c->print();
-			cout << "r - go back to creating new matrices | q - quit the program\n"
-				<<"1:C=A+B | 2:A+=B | 3:C=A-B | 4:A-=B | 5:C=A*B | 6:A*=B"
-				<<"\n 7:Switch matrices";
+		cin.get(controlKey);
+		switch(controlKey){
+		case'1':
+			try { a *= b; }
+			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
+			break;
+		case'2':
+			try { c = a * b; }
+			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
+			break;
+		case'3':
+			try { a += b; }
+			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
+			break;
+		case'4':
+			c = a + b;
+			try { a *= b; }
+			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
+			break;
+		case'5':
+			try { a -= b; }
+			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
+			break;
+		case'6':
+			try { c = a - b;}
+			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
+			break;
+		case'7':
+			cout << "1: Copy a matrix | 2: Edit matrix values | 3: Switch matrix places\n";
 			cin.ignore();
-			programControlKey = cin.get();
-			switch (programControlKey){
+			cin.get(controlKey);
+			switch (controlKey)
+			{
+			case '1':
+				cout << "1: a=b | 2: a=c | 3: b=a | 4: b=c | 5: c=a | 6: c=b: ";
+				cin.ignore();
+				cin.get(controlKey);
+				switch (controlKey)
+				{
 				case '1':
-					//(*c) = (*a) + (*b);
+					a = b;
 					break;
 				case '2':
+					a = c;
 					break;
 				case '3':
+					b = a;
 					break;
 				case '4':
+					b = c;
 					break;
 				case '5':
+					c = a;
 					break;
 				case '6':
-					break;
-				case '7':
+					c = b;
 					break;
 				default:
 					break;
+				}
+				break;
+			case '2':
+				cout << "a - edit A | b - edit B | c - edit C";
+				cin.ignore();
+				cin.get(controlKey);
+				switch (controlKey){
+				case 'a':
+					EditMatrix(a);
+					break;
+				case 'b':
+					EditMatrix(b);
+					break;
+				case 'c':
+					EditMatrix(c);
+					break;
+				default:
+					break;
+				}
+				break;
+			case '3':
+				cout << "1: a<->b | 2: a<->c | 3: b<->c\n";
+				cin.ignore();
+				cin.get(controlKey);
+				Matrix<T> temp = Matrix<T>();
+				switch (controlKey)
+				{
+				case '1':
+					temp = a;
+					a = b;
+					b = temp;
+					break;
+				case '2':
+					temp = a;
+					a = c;
+					c = temp;
+					break;
+				case '3':
+					temp = b;
+					b = c;
+					c = temp;
+					break;
+				default:
+					break;
+				}
+				break;
 			}
-		} while (programControlKey != 'r'&&programControlKey!='q');
-		delete a, b, c;
-	} while (programControlKey != 'q');
+			break;
+		default:
+			break;
+		}
+
+	} while (controlKey != 'r' && controlKey != 'q');
 }
-IMatrix* getTypedMatrixPointer(unsigned rows, unsigned cols, char type)
+
+template <typename T>
+void EditMatrix(Matrix<T>& EditedMatrix)
 {
-	switch (type)//This switch is really messy but right now i just don't know how to make it that much cleaner...
-	{
-	case 'f': {
-		if (rows == 0) return new Matrix<float>();
-		return new Matrix<float>(rows, cols);
-		break;
-	}
-	case 'd': {
-		if (rows == 0) return new Matrix<double>();
-		return new Matrix<double>(rows, cols);
-		break;
-	}
-	case 'i': {
-		if (rows == 0) return new Matrix<int>();
-		return new Matrix<int>(rows, cols);
-		break;
-	}
-	case 'u': {
-		if (rows == 0) return new Matrix<unsigned>();
-		return new Matrix<unsigned>(rows, cols);
-		break;
-	}
-	case 'l': {
-		if (rows == 0) return new Matrix<long>();
-		return new Matrix<long>(rows, cols);
-		break;
-	}
-	default: {
-		if (rows == 0) return new Matrix<int>();
-		cout << "No option found for: " << type << ". Integer applied as default.\n";
-		return new Matrix<int>(rows, cols);
-		break;
-	}
-	}
- }
+	unsigned row, col;
+	T value;
+	char controlKey;
+	do {
+		system("CLS");
+		EditedMatrix.print();
+		cout << "Indexing starts from 0. Please input row column and value divided by single spaces\n";
+		cin.ignore();
+		cin >> row >> col >> value;
+		EditedMatrix(row, col) = value;
+		cout << "q to exit: ";
+		cin.ignore();
+		cin.get(controlKey);
+	} while (controlKey != 'q');
+}
