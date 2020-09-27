@@ -213,7 +213,6 @@ Matrix<T>& Matrix<T>::operator*=(const Matrix& rhs) {  //Doing this operation di
 // Print method
 template<typename T>
 void Matrix<T>::print() {
-    cout << "Matrix: " << endl;
     for (unsigned i = 0; i < m_rowSize; i++) {
         for (unsigned j = 0; j < m_colSize; j++) {
             cout << "[" << m_matrix[i][j] << "] ";
