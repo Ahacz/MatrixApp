@@ -29,13 +29,13 @@ class IMatrix { //Trying to apply polymorphism, so that user can specify type of
 public:
 	virtual ~IMatrix() {};
 	virtual void print() = 0;
-	virtual IMatrix& operator=(const IMatrix&) = 0;
-	virtual IMatrix operator+(const IMatrix&) = 0;
-	virtual IMatrix operator-(const IMatrix&) = 0;
-	virtual IMatrix operator*(const IMatrix&) = 0;
-	virtual IMatrix& operator+=(const IMatrix&) = 0;
-	virtual IMatrix& operator-=(const IMatrix&) = 0;
-	virtual IMatrix& operator*=(const IMatrix&) = 0;
+	//virtual IMatrix& operator=(const IMatrix&) = 0;
+	//virtual IMatrix operator+(const IMatrix&) = 0;
+	//virtual IMatrix operator-(const IMatrix&) = 0;
+	//virtual IMatrix operator*(const IMatrix&) = 0;
+	//virtual IMatrix& operator+=(const IMatrix&) = 0;
+	//virtual IMatrix& operator-=(const IMatrix&) = 0;
+	//virtual IMatrix& operator*=(const IMatrix&) = 0;
 };
 
 template <typename T> class Matrix: public IMatrix
