@@ -4,13 +4,13 @@
 #include <vector>
 
 template <typename T>
-void StartCalc(char &);
+static void StartCalc(char &);
 
 template <typename T>
-void EditMatrix(Matrix<T> &);
+static void EditMatrix(Matrix<T> &);
 
 template <typename T>
-void StartMatrixEdition(Matrix<T>&, Matrix<T>&, Matrix<T>&, char &);
+static void StartMatrixEdition(Matrix<T>&, Matrix<T>&, Matrix<T>&, char &);
 
 int main()
 {
@@ -55,7 +55,7 @@ int main()
 
 
 template <typename T>
-void StartCalc(char & controlKey) {
+static void StartCalc(char & controlKey) {
 	unsigned rows, cols;
 	T value;
 	cout << "Enter the number of rows and columns, along with the value for matrix A, divided by a single space: ";
@@ -112,7 +112,7 @@ void StartCalc(char & controlKey) {
 }
 
 template <typename T>
-void EditMatrix(Matrix<T>& EditedMatrix){
+static void EditMatrix(Matrix<T>& EditedMatrix){
 	unsigned row, col;
 	T value;
 	char controlKey;
@@ -120,7 +120,6 @@ void EditMatrix(Matrix<T>& EditedMatrix){
 		system("CLS");
 		EditedMatrix.print();
 		cout << "Indexing starts from 0. Please input row column and value divided by single spaces\n";
-		cin.ignore();
 		cin >> row >> col >> value;
 		EditedMatrix(row, col) = value;
 		cout << "q to exit: ";
@@ -130,7 +129,7 @@ void EditMatrix(Matrix<T>& EditedMatrix){
 }
 
 template <typename T>
-void StartMatrixEdition(Matrix<T>& a, Matrix<T>& b, Matrix<T>& c, char & controlKey) {
+static void StartMatrixEdition(Matrix<T>& a, Matrix<T>& b, Matrix<T>& c, char & controlKey) {
 	cout << "1: Copy a matrix | 2: Edit matrix values | 3: Switch matrix places\n";
 	cin.ignore();
 	cin.get(controlKey);

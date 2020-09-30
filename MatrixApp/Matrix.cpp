@@ -1,31 +1,37 @@
 #pragma once
 #include "Matrix.h"
 
-using namespace std;
+using std::make_unique;
+using std::unique_ptr;
+using std::cout;
+using std::cin;
+using std::endl;
 
 //////////////////   Dynamic Array starts here 
 //Constructor without arguments creates an array of size 0.
 template<typename T>
 DynamicArray<T>::DynamicArray() {
-    _arrayPointer = new T[0];
+    _arrayPointer = make_unique<T[]>(0);
     _arraySize = 0;
 }
 //Copy constructor
 template<typename T>
 DynamicArray<T>::DynamicArray(DynamicArray& source) {
     _arraySize = source.size();
-    _arrayPointer = new T[_arraySize];
+    _arrayPointer = unique_ptr<T[]>(new T[_arraySize]);
+    for (unsigned i = 0;i < _arraySize;++i){
+        _arrayPointer[i] = source[i];
+    }
 }
 //Creates an array of specified size.
 template<typename T>
 DynamicArray<T>::DynamicArray(unsigned size) {
-    _arrayPointer = new T[size];
+    _arrayPointer = std::make_unique<T[]>(0);
     _arraySize = size;
 }
-//Destructor
+//Destructor does need to worry about deleting, thanks RAII!
 template<typename T>
 DynamicArray<T>::~DynamicArray() {
-    delete[] _arrayPointer;
 }
 
 //Operators of DA
@@ -41,8 +47,8 @@ template<typename T>
 DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray<T>& source) {
     if (&source == this) { return *this; }
     _arraySize = source.size();
-    delete[] _arrayPointer;
-    _arrayPointer = new T[_arraySize];
+    _arrayPointer = std::move(unique_ptr<T[]>(new T[_arraySize])); //same as using .reset() on the pointer. 
+                                                        //The previous array should get deleted. Cannot use a variable expression for make_unique
     for (unsigned i = 0;i < _arraySize;i++) {
         _arrayPointer[i] = source[i];
     }
@@ -52,8 +58,7 @@ template<typename T>
 const DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T>& source) {
     if (&source == this) { return *this; }
     _arraySize = source.size();
-    delete[] _arrayPointer;
-    _arrayPointer = new T[_arraySize];
+    _arrayPointer = unique_ptr<T[]>(new T[_arraySize]);
     for (unsigned i = 0;i < _arraySize;i++) {
         _arrayPointer[i] = source[i];
     }
@@ -70,15 +75,14 @@ unsigned DynamicArray<T>::size() const{
 template <typename T>
 void DynamicArray<T>::resize(unsigned newSize, T newValue) {
     if (newSize == _arraySize) return;
-    T* newArray = new T[newSize];
+    unique_ptr<T[]> newArray(new T[newSize]);
     for (unsigned i = 0;i < newSize && i < _arraySize;++i) {  //Make sure not to copy elements outside of range of existing array
         newArray[i] = _arrayPointer[i];
     }
     for (unsigned i = _arraySize;i < newSize;++i) {   //Ensure eventual new elements are empty
         newArray[i] = newValue;
     }
-    delete[] _arrayPointer; //Clear the old array and replace it with the new one.
-    _arrayPointer = newArray;
+    _arrayPointer = std::move(newArray);   //Unique pointer automatically calls delete[] upon assigning a new object. Ownership of newArray passed to _arrayPointer.
     _arraySize = newSize;
     return;
 }
@@ -223,10 +227,30 @@ Matrix<T>& Matrix<T>::operator*=(const Matrix& rhs) {  //Doing this operation di
     (*this) = resultMatrix;
     return *this;
 }
+template<typename T>
+bool const Matrix<T>::operator == (const Matrix& rhs) {
+    if (this->m_rowSize != rhs.getRows() || this->m_colSize != rhs.getCols()) {
+        return false;
+    }
+    if (!this->m_colSize || !this->m_rowSize) {  //Check if the matrix has actual rows and columns. If a size is 0 then both matrices must be same since they hold no value.
+        return true;
+    }
+    for (unsigned i = 0;i < this->m_rowSize;++i){     //Check each value. If there is a single difference then stop the loop and return false.
+        for(unsigned j = 0 ;j< this->m_colSize;++j)
+            if ((*this)(i, j) != rhs(i, j)) {
+                return false;
+            }
+    }
+    return true;
+}
+template<typename T>
+bool const Matrix<T>::operator != (const Matrix& rhs) {
+    return !((*this) == rhs);
+}
 
 // Print method
 template<typename T>
-void Matrix<T>::print() {
+void Matrix<T>::print() const {
     for (unsigned i = 0; i < m_rowSize; i++) {
         for (unsigned j = 0; j < m_colSize; j++) {
             cout << "[" << m_matrix[i][j] << "] ";

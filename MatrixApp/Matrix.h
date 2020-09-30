@@ -1,11 +1,12 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 
 template <typename T> class DynamicArray 
 {
 private:
-	T* _arrayPointer;
+	std::unique_ptr<T[]> _arrayPointer;
 	unsigned _arraySize;
 public:
 	//Constructors and destructor
@@ -49,12 +50,14 @@ public:
 	Matrix& operator+=(const Matrix&);
 	Matrix& operator-=(const Matrix&);
 	Matrix& operator*=(const Matrix&);
+	bool const operator == (const Matrix&);
+	bool const operator != (const Matrix&);
 
 
 	// Aesthetic Methods
 	T& operator()(const unsigned&, const unsigned&);
 	const T& operator()(const unsigned&, const unsigned&) const;
-	void print();
+	void print() const;
 	unsigned getRows() const;
 	unsigned getCols() const;
 };

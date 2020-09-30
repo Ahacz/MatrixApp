@@ -56,13 +56,36 @@ namespace UnitTests
 			Matrix<int> testingMatrix(2, 3, 5);
 			Assert::AreEqual(5, testingMatrix(1, 2));	//Check if the matrix is filled, as well as the () operator
 			Matrix<int> testingMatrix2(testingMatrix);  //Copy Constructor
-			Assert::AreEqual(5, testingMatrix2(1, 2));
+			Assert::AreEqual(true, (testingMatrix==testingMatrix2));	//Check results along with == operator
 		}
 		TEST_METHOD(MatrixMethods)
 		{
 			Matrix<int> testingMatrix(2, 3, 5);
 			Assert::AreEqual((unsigned)2, testingMatrix.getRows());
 			Assert::AreEqual((unsigned)3, testingMatrix.getCols());
+		}
+		TEST_METHOD(MatrixOperations)
+		{
+			Matrix<int> matrixA(2, 2, 2),
+				matrixB(2, 2, 2),
+				matrixC(2,2,2),
+				resultMatrix(2, 2, 8);
+			matrixC = matrixA * matrixB;
+			Assert::AreEqual(true, (resultMatrix==matrixC));
+			resultMatrix = Matrix<int>(2, 2, 4);
+			matrixC = matrixA + matrixB;
+			Assert::AreEqual(true, (resultMatrix == matrixC));
+			resultMatrix = Matrix<int>(2, 2, 0);
+			matrixC = matrixA - matrixB;
+			Assert::AreEqual(true, (resultMatrix == matrixC));
+			resultMatrix = Matrix<int>(2, 2, 4);
+			matrixA += matrixB;
+			Assert::AreEqual(true, (resultMatrix == matrixA));
+			matrixA -= matrixB;
+			Assert::AreEqual(true, (matrixB == matrixA));
+			resultMatrix = Matrix<int>(2, 2, 8);
+			matrixA *= matrixB;
+			Assert::AreEqual(true, (resultMatrix == matrixA));
 		}
 	};
 }
