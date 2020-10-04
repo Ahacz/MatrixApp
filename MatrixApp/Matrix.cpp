@@ -250,7 +250,11 @@ bool const Matrix<T>::operator != (const Matrix& rhs) {
 
 // Print method
 template<typename T>
+<<<<<<< HEAD
 void Matrix<T>::print() const {
+=======
+void Matrix<T>::print() {
+>>>>>>> b8e716f8dd9bc3ad59e4ff32488475c076138bc6
     for (unsigned i = 0; i < m_rowSize; i++) {
         for (unsigned j = 0; j < m_colSize; j++) {
             cout << "[" << m_matrix[i][j] << "] ";
