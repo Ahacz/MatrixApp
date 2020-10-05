@@ -5,12 +5,13 @@
 
 template <typename T>
 static void StartCalc(char &);
-
 template <typename T>
 static void EditMatrix(Matrix<T> &);
-
 template <typename T>
 static void StartMatrixEdition(Matrix<T>&, Matrix<T>&, Matrix<T>&, char &);
+template <typename T>
+void MatrixOperations(Matrix<T>&, Matrix<T>&, Matrix<T>&, char&);
+void MatrixTypeSelection(char&, char&);
 
 int main()
 {
@@ -21,35 +22,7 @@ int main()
 		cout << "Please specify the type of matrix you want to be working on by pressing a key."<<
 			"\nf-float d-double i-int -u unisgned -l long: ";
 		cin.get(matrixTypeChoice);
-
-		switch (matrixTypeChoice)//This switch is really messy but right now i just don't know how to make it that much cleaner...
-		{
-			case 'f': {
-				StartCalc<float>(programControlKey);
-				break;
-			}
-			case 'd':{
-				StartCalc<double>(programControlKey);
-			break;
-			}
-			case 'i': {
-				StartCalc<int>(programControlKey);
-				break;
-			}
-			case 'u': {
-				StartCalc<unsigned>(programControlKey);
-				break;
-			}
-			case 'l': {
-				StartCalc<long>(programControlKey);
-				break;
-			}
-			default: {
-				cout << "No option found for: " << matrixTypeChoice << ". Integer applied as default.\n";
-				StartCalc<int>(programControlKey);
-				break;
-			}
-		}
+		MatrixTypeSelection(matrixTypeChoice,programControlKey);
 	} while (programControlKey != 'q');
 }
 
@@ -77,37 +50,7 @@ static void StartCalc(char & controlKey) {
 			<< "1: a=a*b | 2: c=a*b | 3: a=a+b | 4: c=a+b | 5: a=a-b | 6: c=a-b | 7: change matrices\n";
 		cin.ignore();
 		cin.get(controlKey);
-		switch(controlKey){
-		case'1':
-			try { a *= b; }
-			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
-			break;
-		case'2':
-			try { c = a * b; }
-			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
-			break;
-		case'3':
-			try { a += b; }
-			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
-			break;
-		case'4':
-			try { c = a + b; }
-			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
-			break;
-		case'5':
-			try { a -= b; }
-			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
-			break;
-		case'6':
-			try { c = a - b;}
-			catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
-			break;
-		case'7':
-			StartMatrixEdition(a, b, c, controlKey);
-		default:
-			break;
-		}
-
+		MatrixOperations(a, b, c, controlKey);
 	} while (controlKey != 'r' && controlKey != 'q');
 }
 
@@ -139,7 +82,7 @@ static void StartMatrixEdition(Matrix<T>& a, Matrix<T>& b, Matrix<T>& c, char & 
 		cout << "1: a=b | 2: a=c | 3: b=a | 4: b=c | 5: c=a | 6: c=b: ";
 		cin.ignore();
 		cin.get(controlKey);
-		switch (controlKey)
+		switch (controlKey)	//Perform assignment
 		{
 		case '1':
 			a = b;
@@ -163,7 +106,7 @@ static void StartMatrixEdition(Matrix<T>& a, Matrix<T>& b, Matrix<T>& c, char & 
 			break;
 		}
 		break;
-	case '2':
+	case '2': //Select Matrix to edit.
 		cout << "a - edit A | b - edit B | c - edit C";
 		cin.ignore();
 		cin.get(controlKey);
@@ -181,7 +124,7 @@ static void StartMatrixEdition(Matrix<T>& a, Matrix<T>& b, Matrix<T>& c, char & 
 			break;
 		}
 		break;
-	case '3':
+	case '3':	//Switch matrix places
 		cout << "1: a<->b | 2: a<->c | 3: b<->c\n";
 		cin.ignore();
 		cin.get(controlKey);
@@ -207,5 +150,71 @@ static void StartMatrixEdition(Matrix<T>& a, Matrix<T>& b, Matrix<T>& c, char & 
 			break;
 		}
 		break;
+	}
+}
+template <typename T>
+void MatrixOperations(Matrix<T>& a, Matrix<T>& b, Matrix<T>& c, char& controlKey)
+{
+	switch (controlKey) {
+	case'1':
+		try { a *= b; }
+		catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
+		break;
+	case'2':
+		try { c = a * b; }
+		catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
+		break;
+	case'3':
+		try { a += b; }
+		catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
+		break;
+	case'4':
+		try { c = a + b; }
+		catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
+		break;
+	case'5':
+		try { a -= b; }
+		catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
+		break;
+	case'6':
+		try { c = a - b; }
+		catch (const std::invalid_argument& e) { cout << e.what() << '\n'; }
+		break;
+	case'7':
+		StartMatrixEdition(a, b, c, controlKey);
+	default:
+		break;
+	}
+}
+
+void MatrixTypeSelection(char& matrixTypeChoice, char& programControlKey)
+{
+	switch (matrixTypeChoice)//This switch is really messy but right now i just don't know how to make it that much cleaner...
+	{
+	case 'f': {
+		StartCalc<float>(programControlKey);
+		break;
+	}
+	case 'd': {
+		StartCalc<double>(programControlKey);
+		break;
+	}
+	case 'i': {
+		StartCalc<int>(programControlKey);
+		break;
+	}
+	case 'u': {
+		StartCalc<unsigned>(programControlKey);
+		break;
+	}
+	case 'l': {
+		StartCalc<long>(programControlKey);
+		break;
+	}
+	default: {
+		cout << "No option found for: " << matrixTypeChoice << ". Integer applied as default.\n";
+		StartCalc<int>(programControlKey);
+		break;
+	}
 	}
 }
