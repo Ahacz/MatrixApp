@@ -1,7 +1,6 @@
 ﻿#include <iostream>
 #include "Matrix.h"
 #include "Matrix.cpp"
-#include <vector>
 
 template <typename T>
 static void StartCalc(char &);
