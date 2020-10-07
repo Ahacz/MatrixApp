@@ -7,14 +7,12 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-//////////////////   Dynamic Array starts here 
-//Constructor without arguments creates an array of size 0.
+//////////////////   
 template<typename T>
 DynamicArray<T>::DynamicArray() {
-    _arrayPointer = make_unique<T[]>(0);
     _arraySize = 0;
+    _arrayPointer = unique_ptr<T[]>(new T[0]);
 }
-//Copy constructor
 template<typename T>
 DynamicArray<T>::DynamicArray(DynamicArray& source) {
     _arraySize = source.size();
