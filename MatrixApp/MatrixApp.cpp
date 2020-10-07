@@ -5,9 +5,13 @@
 template <typename T>
 static void StartCalc(char &);
 template <typename T>
-static void EditMatrix(Matrix<T> &);
+static void EditMatrix(Matrix<T> &, Matrix<T>&, Matrix<T>&);
 template <typename T>
 static void StartMatrixEdition(Matrix<T>&, Matrix<T>&, Matrix<T>&, char &);
+template <typename T>
+void MatrixAssignment(Matrix<T>&, Matrix<T>&, Matrix<T>&);
+template <typename T>
+void SwitchPlaces(Matrix<T>&, Matrix<T>&, Matrix<T>&);
 template <typename T>
 void MatrixOperations(Matrix<T>&, Matrix<T>&, Matrix<T>&, char&);
 void MatrixTypeSelection(char&, char&);
@@ -54,16 +58,33 @@ static void StartCalc(char & controlKey) {
 }
 
 template <typename T>
-static void EditMatrix(Matrix<T>& EditedMatrix){
+static void EditMatrix(Matrix<T>& a, Matrix<T>& b, Matrix<T>&c){
+	char controlKey;
+	cout << "a - edit A | b - edit B | c - edit C";
+	cin.ignore();
+	cin.get(controlKey);
+	Matrix<T>* editingTarget = nullptr;	//This raw pointer here does not create new data or delete it - it's simply a handle for a later while loop.
+	switch (controlKey) {
+	case 'a':
+		editingTarget = &a;
+		break;
+	case 'b':
+		editingTarget = &b;
+		break;
+	case 'c':
+		editingTarget = &c;
+		break;
+	default:
+		return;
+	}
 	unsigned row, col;
 	T value;
-	char controlKey;
 	do {
 		system("CLS");
-		EditedMatrix.print();
+		editingTarget->print();
 		cout << "Indexing starts from 0. Please input row column and value divided by single spaces\n";
 		cin >> row >> col >> value;
-		EditedMatrix(row, col) = value;
+		(*editingTarget)(row, col) = value;
 		cout << "q to exit: ";
 		cin.ignore();
 		cin.get(controlKey);
@@ -78,76 +99,13 @@ static void StartMatrixEdition(Matrix<T>& a, Matrix<T>& b, Matrix<T>& c, char & 
 	switch (controlKey)
 	{
 	case '1':
-		cout << "1: a=b | 2: a=c | 3: b=a | 4: b=c | 5: c=a | 6: c=b: ";
-		cin.ignore();
-		cin.get(controlKey);
-		switch (controlKey)	//Perform assignment
-		{
-		case '1':
-			a = b;
-			break;
-		case '2':
-			a = c;
-			break;
-		case '3':
-			b = a;
-			break;
-		case '4':
-			b = c;
-			break;
-		case '5':
-			c = a;
-			break;
-		case '6':
-			c = b;
-			break;
-		default:
-			break;
-		}
+		MatrixAssignment(a, b, c);
 		break;
 	case '2': //Select Matrix to edit.
-		cout << "a - edit A | b - edit B | c - edit C";
-		cin.ignore();
-		cin.get(controlKey);
-		switch (controlKey) {
-		case 'a':
-			EditMatrix(a);
-			break;
-		case 'b':
-			EditMatrix(b);
-			break;
-		case 'c':
-			EditMatrix(c);
-			break;
-		default:
-			break;
-		}
+		EditMatrix(a, b, c);
 		break;
 	case '3':	//Switch matrix places
-		cout << "1: a<->b | 2: a<->c | 3: b<->c\n";
-		cin.ignore();
-		cin.get(controlKey);
-		Matrix<T> temp = Matrix<T>();
-		switch (controlKey)
-		{
-		case '1':
-			temp = a;
-			a = b;
-			b = temp;
-			break;
-		case '2':
-			temp = a;
-			a = c;
-			c = temp;
-			break;
-		case '3':
-			temp = b;
-			b = c;
-			c = temp;
-			break;
-		default:
-			break;
-		}
+		SwitchPlaces(a, b, c);
 		break;
 	}
 }
@@ -215,5 +173,67 @@ void MatrixTypeSelection(char& matrixTypeChoice, char& programControlKey)
 		StartCalc<int>(programControlKey);
 		break;
 	}
+	}
+}
+
+template <typename T>
+void MatrixAssignment(Matrix<T>& a, Matrix<T>& b, Matrix<T>& c)
+{
+	char controlKey;
+	cout << "1: a=b | 2: a=c | 3: b=a | 4: b=c | 5: c=a | 6: c=b: ";
+	cin.ignore();
+	cin.get(controlKey);
+	switch (controlKey)	//Perform assignment
+	{
+	case '1':
+		a = b;
+		break;
+	case '2':
+		a = c;
+		break;
+	case '3':
+		b = a;
+		break;
+	case '4':
+		b = c;
+		break;
+	case '5':
+		c = a;
+		break;
+	case '6':
+		c = b;
+		break;
+	default:
+		break;
+	}
+}
+
+template <typename T>
+void SwitchPlaces(Matrix<T>&a, Matrix<T>&b, Matrix<T>&c)
+{
+	char controlKey;
+	cout << "1: a<->b | 2: a<->c | 3: b<->c\n";
+	cin.ignore();
+	cin.get(controlKey);
+	Matrix<T> temp = Matrix<T>();
+	switch (controlKey)
+	{
+	case '1':
+		temp = a;
+		a = b;
+		b = temp;
+		break;
+	case '2':
+		temp = a;
+		a = c;
+		c = temp;
+		break;
+	case '3':
+		temp = b;
+		b = c;
+		c = temp;
+		break;
+	default:
+		break;
 	}
 }
